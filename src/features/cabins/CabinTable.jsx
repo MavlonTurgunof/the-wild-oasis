@@ -25,9 +25,38 @@ const TableHeader = styled.header`
 `;
 
 import React from "react";
+import { useQuery } from "react-query";
+import { getCabins } from "../../services/apiCabins";
+import Spinner from "../../ui/Spinner";
+import CabinRow from "./CabinRow";
 
 function CabinTable() {
-  return <div>CabinTable</div>;
+  const {
+    isLoading,
+    data: cabins,
+    error,
+  } = useQuery({
+    queryKey: ["cabins"],
+    queryFn: getCabins,
+  });
+
+  if (isLoading) return <Spinner />;
+
+  return (
+    <Table>
+      <TableHeader>
+        <div></div>
+        <div>Cabin</div>
+        <div>Capacity</div>
+        <div>Price</div>
+        <div>Discount</div>
+        <div></div>
+      </TableHeader>
+      {cabins.map((cabin) => (
+        <CabinRow cabin={cabin} key={cabin.id} />
+      ))}
+    </Table>
+  );
 }
 
 export default CabinTable;
